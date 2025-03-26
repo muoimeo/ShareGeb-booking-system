@@ -10,7 +10,7 @@ A Python-based ride-sharing platform built with Flask for web functionality and 
 - Colorful, responsive UI
 
 ## Setup
-1. Clone the repository: `git clone https://github.com/yourusername/RideShare-Booking-System.git`
+1. Clone the repository: `git clone https://github.com/muoimeo/ShareGeb-booking-system.git`
 2. Navigate to the project folder: `cd RideShare-Booking-System/advanced-software-development`
 3. Create a virtual environment: `python -m venv venv`
 4. Activate it: `venv\Scripts\activate` (Windows) or `source venv/bin/activate` (macOS/Linux)
