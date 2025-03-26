@@ -3,11 +3,12 @@ venv/
 env/
 .venv/
 
-# Python bytecode and compiled files
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*.so
+*.dll
+*.dylib
 
 # IDE and editor files
 .vscode/
