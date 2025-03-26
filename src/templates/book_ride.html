@@ -386,40 +386,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Book now button
-    document.getElementById('book-now').addEventListener('click', function() {
-        document.getElementById('pickup-time').value = '';
-    });
-
     // Form submission
     document.getElementById('booking-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        const pickupTime = document.getElementById('pickup-time').value;
-        const pickup = document.getElementById('pickup').value;
-        const dropoff = document.getElementById('dropoff').value;
-        const passengers = document.getElementById('passengers').value;
-        const vehicleType = document.querySelector('.vehicle-type.selected')?.dataset.type || 'standard';
-        const notes = document.getElementById('notes').value;
-        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-
-        if (!pickup || !dropoff) {
-            alert('Vui lòng nhập điểm đón và điểm đến');
-            return;
-        }
-
-        // Tạo thông báo chi tiết
-        let message = 'Đặt xe thành công!\n\n';
-        message += `Điểm đón: ${pickup}\n`;
-        message += `Điểm đến: ${dropoff}\n`;
-        message += `Số hành khách: ${passengers}\n`;
-        message += `Loại xe: ${vehicleType === 'standard' ? 'Standard' : 'Luxury'}\n`;
-        message += `Thời gian: ${pickupTime ? pickupTime : 'Ngay lập tức'}\n`;
-        message += `Phương thức thanh toán: ${paymentMethod === 'cash' ? 'Tiền mặt' : 
-                                            paymentMethod === 'card' ? 'Thẻ tín dụng' : 'Ví MoMo'}\n`;
-        if (notes) message += `Ghi chú: ${notes}`;
-
-        alert(message);
+        // Add booking logic here
+        alert('Đặt xe thành công!');
     });
 
     // Locate me button

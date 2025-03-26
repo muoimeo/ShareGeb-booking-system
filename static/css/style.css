@@ -1,0 +1,263 @@
+:root {
+    --primary-color: #008080;      /* RGB(0, 128, 128) - Màu chính */
+    --primary-dark: #006666;       /* Phiên bản tối hơn của màu chính */
+    --primary-light: #00A0A0;      /* Phiên bản sáng hơn của màu chính */
+    --secondary-color: #142828;    /* RGB(20, 40, 40) - Màu phụ chính */
+    --secondary-light: #1A3333;    /* Phiên bản sáng hơn của màu phụ */
+    --accent-color: #FF6B6B;       /* Màu nhấn - đỏ san hô */
+    --accent-light: #FF8E8E;       /* Phiên bản sáng hơn của màu nhấn */
+    --background-color: #F5F6FA;   /* Màu nền */
+    --text-color: #142828;         /* Màu chữ */
+    --card-bg: #FFFFFF;            /* Màu nền card */
+    --success-color: #00A0A0;      /* Màu thành công */
+    --warning-color: #FFB74D;      /* Màu cảnh báo */
+    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    --gradient-secondary: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    background: var(--gradient-primary) !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: white !important;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--accent-light) !important;
+    transform: translateY(-1px);
+}
+
+.dashboard-container {
+    padding: 2rem;
+}
+
+.map-container {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+}
+
+.ride-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 1rem;
+}
+
+.booking-form {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 0.8rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25);
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: var(--gradient-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: var(--gradient-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, var(--warning-color), #FFA726);
+    color: white;
+}
+
+.status-confirmed {
+    background: linear-gradient(135deg, var(--success-color), var(--primary-light));
+    color: white;
+}
+
+/* Footer styles */
+footer {
+    background: var(--gradient-secondary) !important;
+}
+
+footer a {
+    color: var(--accent-light) !important;
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.social-links a {
+    color: var(--accent-light) !important;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Modal styles */
+.modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--background-color);
+}
+
+/* List group styles */
+.list-group-item {
+    border-left: none;
+    border-right: none;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: rgba(0, 128, 128, 0.05);
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Map controls */
+.map-controls .btn {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    border: none;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+}
+
+.map-controls .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.map-controls .btn i {
+    font-size: 16px;
+}
+
+/* Form controls */
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25);
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.5em 1em;
+    font-weight: 500;
+}
+
+.badge.bg-success {
+    background: var(--gradient-primary) !important;
+}
+
+.badge.bg-primary {
+    background: var(--gradient-secondary) !important;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+    
+    .ride-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    #map {
+        height: 300px;
+    }
+    
+    .map-controls .btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}

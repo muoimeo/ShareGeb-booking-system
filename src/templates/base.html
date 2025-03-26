@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideShare Booking</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+            margin-bottom: 10rem;
+        }
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home.home') }}">
+                <i class="fas fa-car"></i> ShareGeb
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('home.home') }}">
+                            <i class="fas fa-home"></i> Trang chủ
+                        </a>
+                    </li>
+                    {% if session.get('user_id') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('book_ride.book_ride') }}">
+                            <i class="fas fa-car"></i> Đặt xe ngay
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('payment.payment') }}">
+                            <i class="fas fa-wallet"></i> Phương thức thanh toán
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.get('user_id') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i> {{ session.get('full_name', 'Profile') }}
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="profileDropdown">
+                            <!-- User Info -->
+                            <div class="dropdown-header text-center p-3">
+                                <div class="avatar-container mb-2">
+                                    <img src="{{ url_for('static', filename='image/avatars/' + session.get('avatar', 'basic_avatar.png')) }}?v={{ range(1000, 9999) | random }}" 
+                                         class="avatar rounded-circle" 
+                                         alt="User Avatar">
+                                </div>
+                                <h6 class="mb-1">{{ session.get('full_name', 'User') }}</h6>
+                                <div class="rating mb-1">
+                                    {% set rating = session.get('rating', 0) %}
+                                    {% if rating > 0 %}
+                                        {% for i in range(5) %}
+                                            {% if i < rating|int %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% elif i < rating and i >= rating|int %}
+                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                            {% else %}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="ms-1">{{ session.get('rating', 0) }}</span>
+                                    {% else %}
+                                        <span class="text-muted">Chưa có đánh giá</span>
+                                    {% endif %}
+                                </div>
+                                {% set member_rank = session.get('member_rank', '') %}
+                                <span class="badge 
+                                    {% if member_rank == 'Iron Member' %}bg-secondary{% 
+                                    elif member_rank == 'Bronze Member' %}bg-bronze text-dark{% 
+                                    elif member_rank == 'Silver Member' %}bg-silver text-dark{% 
+                                    elif member_rank == 'Gold Member' %}bg-warning text-dark{% 
+                                    elif member_rank == 'Diamond Member' %}bg-info text-white{% 
+                                    else %}bg-danger text-white{% endif %}">
+                                    {% if member_rank == 'Iron Member' %}
+                                        <i class="fas fa-shield-alt"></i>
+                                    {% elif member_rank == 'Bronze Member' %}
+                                        <i class="fas fa-medal"></i>
+                                    {% elif member_rank == 'Silver Member' %}
+                                        <i class="fas fa-medal"></i>
+                                    {% elif member_rank == 'Gold Member' %}
+                                        <i class="fas fa-crown"></i>
+                                    {% elif member_rank == 'Diamond Member' %}
+                                        <i class="fas fa-gem"></i>
+                                    {% else %}
+                                        <i class="fas fa-award"></i>
+                                    {% endif %}
+                                    {{ member_rank }}
+                                </span>
+                            </div>
+
+                            <!-- Self Description -->
+                            <div class="px-3 pb-2">
+                                <div class="tags-container mb-2">
+                                    {% if session.get('interests') %}
+                                        {% set colors = ['bg-primary', 'bg-info', 'bg-success', 'bg-warning', 'bg-danger', 'bg-secondary'] %}
+                                        {% for interest in session.get('interests', '').split(',') %}
+                                            {% set color = colors[loop.index0 % colors|length] %}
+                                            {% if interest.strip() == 'Game' %}
+                                                <span class="badge {{ color }} me-1 mb-1">Game lover</span>
+                                            {% elif interest.strip() == 'Manga' %}
+                                                <span class="badge {{ color }} me-1 mb-1">Manga enjoyer</span>
+                                            {% elif interest.strip() == 'Coffee' %}
+                                                <span class="badge {{ color }} me-1 mb-1">Coffee addict</span>
+                                            {% else %}
+                                                <span class="badge {{ color }} me-1 mb-1">{{ interest.strip() }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                {% if session.get('bio') %}
+                                <p class="text-muted small mb-0">
+                                    "{{ session.get('bio') }}"
+                                </p>
+                                {% else %}
+                                <p class="text-muted small mb-0 text-center">
+                                    "Chưa có mô tả"
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            <hr class="dropdown-divider">
+
+                            <!-- Menu Items -->
+                            <a class="dropdown-item" href="{{ url_for('users.profile') }}">
+                                <i class="fas fa-user me-2"></i>Chỉnh sửa thông tin
+                            </a>
+                            <a class="dropdown-item" href="{{ url_for('users.recent_rides') }}">
+                                <i class="fas fa-history me-2"></i>Chuyến đi gần đây
+                            </a>
+                            <a class="dropdown-item" href="{{ url_for('users.settings') }}">
+                                <i class="fas fa-cog me-2"></i>Cài đặt
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item text-danger" href="{{ url_for('users.logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                            </a>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('users.login') }}">
+                            <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('users.register') }}">
+                            <i class="fas fa-user-plus"></i> Đăng ký
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>About RideShare</h5>
+                    <p>Your trusted partner for shared rides in Hanoi</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/about" class="text-light">About Us</a></li>
+                        <li><a href="/contact" class="text-light">Contact</a></li>
+                        <li><a href="/terms" class="text-light">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+    .profile-dropdown {
+        width: 300px;
+        padding: 0;
+        z-index: 1050;
+        animation: dropdownFade 0.3s ease-in-out;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    @keyframes dropdownFade {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-dropdown .dropdown-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 50%;
+        background-color: #f8f9fa;
+    }
+
+    .tags-container {
+        min-height: 40px;
+    }
+
+    .profile-dropdown .badge {
+        font-weight: 500;
+        padding: 0.5em 0.8em;
+        border-radius: 20px;
+    }
+
+    .profile-dropdown .rating {
+        font-size: 0.9rem;
+    }
+
+    .profile-dropdown .dropdown-item {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        margin: 0.2rem 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .profile-dropdown .dropdown-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+
+    .profile-dropdown .dropdown-item i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .profile-dropdown .dropdown-divider {
+        margin: 0.5rem 0;
+    }
+    .bg-bronze {
+        background-color: #cd7f32;
+    }
+    .bg-silver {
+        background-color: #c0c0c0;
+    }
+    </style>
+</body>
+</html>
