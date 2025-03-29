@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block content %}
-    <h2>Apply a Discount</h2>
-    <form method="POST">
-        <label>Code: <input type="text" name="code"></label><br>
-        <button type="submit">Apply</button>
-    </form>
-    {% if message %}<p>{{ message }}</p>{% endif %}
-{% endblock %}
